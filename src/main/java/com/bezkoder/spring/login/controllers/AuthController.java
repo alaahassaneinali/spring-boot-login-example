@@ -23,20 +23,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bezkoder.spring.login.models.ERole;
-import com.bezkoder.spring.login.models.Role;
+//import com.bezkoder.spring.login.models.Role;
 import com.bezkoder.spring.login.models.User;
 import com.bezkoder.spring.login.payload.request.LoginRequest;
 import com.bezkoder.spring.login.payload.request.SignupRequest;
 import com.bezkoder.spring.login.payload.response.UserInfoResponse;
 import com.bezkoder.spring.login.payload.response.MessageResponse;
-import com.bezkoder.spring.login.repository.RoleRepository;
+//import com.bezkoder.spring.login.repository.RoleRepository;
 import com.bezkoder.spring.login.repository.UserRepository;
 import com.bezkoder.spring.login.security.jwt.JwtUtils;
 import com.bezkoder.spring.login.security.services.UserDetailsImpl;
 
 //for Angular Client (withCredentials)
-//@CrossOrigin(origins = "http://localhost:8081", maxAge = 3600, allowCredentials="true")
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:8081", maxAge = 3600, allowCredentials="true")
+//@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -46,8 +46,8 @@ public class AuthController {
   @Autowired
   UserRepository userRepository;
 
-  @Autowired
-  RoleRepository roleRepository;
+//  @Autowired
+//  RoleRepository roleRepository;
 
   @Autowired
   PasswordEncoder encoder;
@@ -94,31 +94,32 @@ public class AuthController {
                          encoder.encode(signUpRequest.getPassword()));
 
     Set<String> strRoles = signUpRequest.getRole();
-    Set<Role> roles = new HashSet<>();
+//    Set<Role> roles = new HashSet<>();
+    Set<String> roles = new HashSet<>();
 
     if (strRoles == null) {
-      Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-          .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-      roles.add(userRole);
+//      Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+//          .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+      roles.add(ERole.ROLE_USER.name());
     } else {
       strRoles.forEach(role -> {
         switch (role) {
         case "admin":
-          Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-              .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-          roles.add(adminRole);
+//          Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+//              .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+          roles.add(ERole.ROLE_ADMIN.name());
 
           break;
         case "mod":
-          Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
-              .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-          roles.add(modRole);
+//          Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
+//              .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+          roles.add(ERole.ROLE_MODERATOR.name());
 
           break;
         default:
-          Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-              .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-          roles.add(userRole);
+//          Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+//              .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+          roles.add(ERole.ROLE_USER.name());
         }
       });
     }
